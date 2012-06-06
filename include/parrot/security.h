@@ -4,7 +4,21 @@
  *     The security handles limiters, permissions and restrictions of the parrot system.
  */
 
+#ifndef PARROT_SECURITY_H_GUARD
+#define PARROT_SECURITY_H_GUARD
 
+SECURITY_CONTEXT /*TBD*/
+
+
+
+
+
+
+
+
+
+
+#endif /* PARROT_SECURITY_H_GUARD */
 
 /*
  * Local variables:
