@@ -478,6 +478,8 @@ INTERP_O_FILES = \
 	src/call/args$(O)  \
 	src/interp/inter_cb$(O)  \
 	src/interp/api$(O)  \
+	src/security/api$(0)  \
+	src/security/utility$(0)  \
 	src/call/ops$(O)  \
 	src/call/context$(O) \
 	src/call/context_accessors$(O) \
