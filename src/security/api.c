@@ -31,6 +31,7 @@ static void panic_failed_allocation(unsigned int line, unsigned long size);
 PARROT_FUNCTION_NOT_SUPPORTED
 static int SECURITY_CONTEXT(PARROT_INTERP, ARGIN(STRING* var))
        __attribute__nonnull__(1);
+       __attribute__nonnull__(2);
 
 #define ASSERT_ARGS_SECURITY_CONTEXT __attribute__unused__ int _ASSERT_ARGS_CHECK = (\
        PARROT_ASSERT_ARG(interp) \
@@ -39,6 +40,11 @@ static int SECURITY_CONTEXT(PARROT_INTERP, ARGIN(STRING* var))
 /* Don't modify between HEADERIZER BEGIN / HEADERIZER END.  Your changes will be lost. */
 /* HEADERIZER END: static */
 
+#define PERMISSION_SOCKET_IO 0x01
+#define PERMISSION_LOAD_BYTECODE 0x02
+#define PERMISSION_LOAD_DYNPMC 0x04
+#define PERMISSION_LOAD_DYNOP 0x08
+ 
 /* 
 
 =item C<Parrot_sec_allocate_context(interp)
@@ -53,7 +59,7 @@ PARROT_MALLOC
 PARROT_CANNOT_RETURN_NULL
 Parrot_sec_allocate_context(interp)
 {
-	/*   Allocates a zeroed memory block to the context */
+/*   Allocates a zeroed memory block to the context */
     ASSERT_ARGS(Parrot_sec_allocate_context)
     int * context;
 
@@ -79,12 +85,26 @@ PARROT_EXPORT
 PARROT_MALLOC
 PARROT_CANNOT_RETURN_NULL
 Parrot_sec_initialize_context(interp, context, flags, PMC *named_permissions)
+{
+    ASSERT_ARGS(Parrot_sec_initialize_context)
+    Parrot_context_initialize(interp, named_permissions);
+    
+    const int PERMISSION;
 
+    enum named_permissions {
+    PERMISSION_SOCKET_IO = 0x01, 
+    PERMISSION_LOAD_BYTECODE = 0x02,
+    PERMISSION_LOAD_DYNPMC = 0x04,
+    PERMISSION_LOAD_DYNOP = 0x08
+    };
 
+    PERMISSION = PERMISSION_SOCKET_IO | PERMISSION_LOAD_BYTECODE | PERMISSION_LOAD_DYNPMC | PERMISSION_LOAD_DYNOP;
 
-
-
-
+  
+    }
+ 
+return sec->permission_bits & permision;
+}
 
 
 /*
@@ -106,7 +126,68 @@ Parrot_sec_free_context(interp, context)
     if (context)
         free(context);
 }
-	
+
+/*
+Pushes context using old_context as parent
 
 
+*/	
+Parrot_EXPORT
+PARROT_MALLOC
+PARROT_CANNOT_RETURN_NULL
+Parrot_sec_push_new_context(interp, old_context)
+{
+    ASSERT_ARGS(Parrot_sec_push_new_context)
+    Interp *Interp
+    
+    context = Parrot_sec_initialize_context(interp, context);
 
+class old_context{
+    private:
+        int new_context;
+    public:
+        void values (int *context)
+          {new_context = context}
+    };
+
+class sec_context: public old_context{
+  public:
+    int get_data ()
+       { return (new_context);}
+
+    }
+
+return;
+
+}
+
+/*
+Gets current context from interp
+*/
+Parrot_EXPORT
+PARROT_MALLOC
+PARROT_CANNOT_RETURN_NULL
+Parrot_sec_get_current_context(interp)
+{
+    ASSERT_ARGS(Parrot_sec_get_current_content)
+    return Parrot_sec_push_new_context(interp, context)
+}
+
+/*
+
+=back
+
+=head1 SEE ALSO
+
+L<src/security/security_private.h>
+
+=cut
+
+*/
+
+/*
+ * Local variables:
+ *   c-file-style: "parrot"
+ * End:
+ * vim: expandtab shiftwidth=4 cinoptions='\:2=2' :
+ */
