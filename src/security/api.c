@@ -54,7 +54,6 @@ Allocating memory for Interp
 */
 
 
-PARROT_EXPORT
 PARROT_MALLOC
 PARROT_CANNOT_RETURN_NULL
 Parrot_sec_allocate_context(interp)
@@ -71,7 +70,6 @@ Initializing memory for the Interp.
 
 */
 
-PARROT_EXPORT
 PARROT_MALLOC
 PARROT_CANNOT_RETURN_NULL
 Parrot_sec_initialize_context(interp, context, flags, PMC *named_permissions)
@@ -79,21 +77,12 @@ Parrot_sec_initialize_context(interp, context, flags, PMC *named_permissions)
     ASSERT_ARGS(Parrot_sec_initialize_context)
     Parrot_context_initialize(interp, named_permissions);
     
-    const int PERMISSION;
-
-    enum named_permissions {
-    PERMISSION_SOCKET_IO = 0x01, 
-    PERMISSION_LOAD_BYTECODE = 0x02,
-    PERMISSION_LOAD_DYNPMC = 0x04,
-    PERMISSION_LOAD_DYNOP = 0x08
-    };
-
-    PERMISSION = PERMISSION_SOCKET_IO | PERMISSION_LOAD_BYTECODE | PERMISSION_LOAD_DYNPMC | PERMISSION_LOAD_DYNOP;
+    int permission; 
 
   
-    }
+}
  
-return sec->permission_bits & permision;
+return sec->permission_bits & permission;
 }
 
 
@@ -105,7 +94,6 @@ Freeing up memory for the Interp.
 
 */
 
-Parrot_EXPORT
 void 
 Parrot_sec_free_context(interp, context)
 {
@@ -118,7 +106,7 @@ Pushes context using old_context as parent
 
 
 */	
-Parrot_EXPORT
+
 PARROT_MALLOC
 PARROT_CANNOT_RETURN_NULL
 Parrot_sec_push_new_context(interp, old_context)
@@ -150,7 +138,7 @@ return;
 /*
 Gets current context from interp
 */
-Parrot_EXPORT
+
 PARROT_MALLOC
 PARROT_CANNOT_RETURN_NULL
 Parrot_sec_get_current_context(interp)
