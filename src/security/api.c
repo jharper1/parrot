@@ -61,18 +61,8 @@ Parrot_sec_allocate_context(interp)
 {
 /*   Allocates a zeroed memory block to the context */
     ASSERT_ARGS(Parrot_sec_allocate_context)
-    int * context;
-
-    context = calloc(1, sizeof(int));
-
-    if (context==0)
-        PANIC_ZERO_ALLOCATION("Parrot_sec_allocate_context");
-#ifdef DETAIL_MEMORY_DEBUG
-    fprintf(stderr, "Allocated %i at %p\n", size);
-#endif
-    return interp;
+    return (SECURITY_CONTEXT*)mem_sys_allocate_zeroed(sizeof(SECURITY_CONTEXT));
 }
-
 /*
 
 =item C<Parrot_sec_initialize_context(interp, context)
@@ -120,11 +110,7 @@ void
 Parrot_sec_free_context(interp, context)
 {
     ASSERT_ARGS(Parrot_sec_free_context)
-#ifdef DETAIL_MEMORY_DEBUG
-    fprintf(stderr, "Freed %p\n", context);
-#endif
-    if (context)
-        free(context);
+    mem_sys_free(context);
 }
 
 /*
